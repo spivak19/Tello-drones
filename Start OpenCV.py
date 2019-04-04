@@ -1,0 +1,44 @@
+import cv2
+from matplotlib import pyplot as plt
+import numpy as np
+import random
+import functions
+
+
+img_temp = cv2.imread('lenna.jpg',0)
+h, w = img_temp.shape
+x_resize = 400
+y_resize = x_resize*h/w
+img=cv2.resize(img_temp, (x_resize, y_resize))
+
+sp=functions.Functions(img,0.1)                   #salt and pepper noise
+salt_and_pepper = sp.salt_pepper()
+
+median = cv2.medianBlur(salt_and_pepper,3)      #median filter
+hist_eq=cv2.equalizeHist(img)                   #equalize histogram
+
+edge_detection = cv2.Canny(hist_eq,10,255)      #edge detection
+
+hist_eq=cv2.equalizeHist(img)                   #equalize histogram
+"""
+histogram stretch
+"""
+hist,bins = np.histogram(img.flatten(),256,[0,256])
+cdf = hist.cumsum()
+cdf_normalized = cdf * hist.max()/ cdf.max()
+cdf_m = np.ma.masked_equal(cdf,0)
+cdf_m = (cdf_m - cdf_m.min())*255/(cdf_m.max()-cdf_m.min())
+cdf = np.ma.filled(cdf_m,0).astype('uint8')
+img2 = cdf[img]
+
+
+cv2.imshow('original image', img)
+cv2.waitKey(0)
+cv2.imshow('hist stretch' , img2)
+cv2.waitKey(0)
+cv2.imshow('hist adjusted', hist_eq)
+cv2.waitKey(0)
+cv2.imshow('edge detection' , edge_detection)
+
+cv2.waitKey(0)                                  #waits untill any keyboard event
+cv2.destroyAllWindows()
