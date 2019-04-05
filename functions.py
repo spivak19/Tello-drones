@@ -55,7 +55,22 @@ class Functions:
         return edged
 
     # Colored only!
-    def face(self):
+    #For video- Faster algorithm
+    def face_video(self):
+        img = self.image
+        img= cv2.resize(img, (0,0), fx=0.5, fy=0.5)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
+        face_detect = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+        face_detect
+        for (x, y, w, h) in face_detect:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
+        img= cv2.resize(img, (0,0), fx=2, fy=2)
+        return img
+
+    # Colored only!
+    # For image
+    def face_image(self):
         img = self.image
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')

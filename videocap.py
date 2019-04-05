@@ -12,15 +12,13 @@ while True:
     # convert to grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    #Resize frame size (Optional)
-    frame= cv2.resize(frame, (0,0), fx=0.5, fy=0.5)
 
     #Initiate the function class with grayscale image- the class that holds all of the functions
     function = functions.Functions(gray)
 
     #initiate the function class with colored image
     #and start the face recognition function
-    face= functions.Functions(frame).face()
+    face= functions.Functions(frame).face_video()
 
     # Gaussian blur
     #gauss = function.gauss
