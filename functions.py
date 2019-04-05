@@ -52,3 +52,14 @@ class Functions:
 
         # return the edged image
         return edged
+
+    def face(self):
+        img = self.image
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
+        face_detect = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+        face_detect
+        for (x, y, w, h) in face_detect:
+            cv2.rectangle(img, (x, y), (x + w+20, y + h+20), (255, 0, 150), 5)
+        return img
+
