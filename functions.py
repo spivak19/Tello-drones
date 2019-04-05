@@ -64,5 +64,15 @@ class Functions:
         return img
 
     def dynamic_thresh(self):
-        threshold= cv2.adaptiveThreshold(self.image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
-        return threshold
+        return cv2.adaptiveThreshold(self.image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
+
+    def hist_stretch(self):
+        image = self.image
+        hist, bins = np.histogram(image.flatten(), 256, [0, 256])
+        cdf = hist.cumsum()
+        cdf_normalized = cdf * hist.max() / cdf.max()
+        cdf_m = np.ma.masked_equal(cdf, 0)
+        cdf_m = (cdf_m - cdf_m.min()) * 255 / (cdf_m.max() - cdf_m.min())
+        cdf = np.ma.filled(cdf_m, 0).astype('uint8')
+        return cdf[image]
+

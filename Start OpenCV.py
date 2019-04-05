@@ -11,8 +11,8 @@ x_resize = 400
 y_resize = x_resize*h/w
 img=cv2.resize(img_temp, (x_resize, y_resize))
 
-sp=functions.Functions(img,0.1)                   #salt and pepper noise
-salt_and_pepper = sp.salt_pepper()
+sp=functions.Functions(img)                   #salt and pepper noise
+salt_and_pepper = sp.salt_pepper(0.1)
 
 median = cv2.medianBlur(salt_and_pepper,3)      #median filter
 hist_eq=cv2.equalizeHist(img)                   #equalize histogram
@@ -23,18 +23,12 @@ hist_eq=cv2.equalizeHist(img)                   #equalize histogram
 """
 histogram stretch
 """
-hist,bins = np.histogram(img.flatten(),256,[0,256])
-cdf = hist.cumsum()
-cdf_normalized = cdf * hist.max()/ cdf.max()
-cdf_m = np.ma.masked_equal(cdf,0)
-cdf_m = (cdf_m - cdf_m.min())*255/(cdf_m.max()-cdf_m.min())
-cdf = np.ma.filled(cdf_m,0).astype('uint8')
-img2 = cdf[img]
+stretched= sp.hist_stretch()
 
 
 cv2.imshow('original image', img)
 cv2.waitKey(0)
-cv2.imshow('hist stretch' , img2)
+cv2.imshow('hist stretch' , stretched)
 cv2.waitKey(0)
 cv2.imshow('hist adjusted', hist_eq)
 cv2.waitKey(0)
