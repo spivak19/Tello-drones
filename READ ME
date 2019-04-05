@@ -4,6 +4,7 @@ as of today this project contains mainly image proccessing algorithms.
 
 File name and what it does:
 Start OpenCV- a python code file for experienting with image proccessing. note- it's outdated. It will be updated soon.
+note that we are using opencv version 2.4.
 
 functions- this is a Class. the heart of the project- contains all of the functions used by the project
 
