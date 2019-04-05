@@ -1,0 +1,12 @@
+Welcome to Python- Tello drones project
+as you can see, there is'nt much tello droning happening around here, for now
+as of today this project contains mainly image proccessing algorithms.
+
+File name and what it does:
+Start OpenCV- a python code file for experienting with image proccessing. note- it's outdated. It will be updated soon.
+
+functions- this is a Class. the heart of the project- contains all of the functions used by the project
+
+videocap- python file for capturing video and proccessing the video with various functions from the function class
+
+Enjoy
