@@ -11,6 +11,8 @@ x_resize = 400
 y_resize = x_resize*h/w
 img=cv2.resize(img_temp, (x_resize, y_resize))
 
+colored=functions.Functions(cv2.imread('lena.jpg'))
+
 sp=functions.Functions(img)                   #salt and pepper noise
 salt_and_pepper = sp.salt_pepper(0.1)
 
