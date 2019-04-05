@@ -1,9 +1,8 @@
 import cv2
-from matplotlib import pyplot as plt
-import numpy as np
-import random
 import functions
 
+#hey sahar! i'm editing the code straightly from pycharm!
+#please accept this commit!!
 
 img_temp = cv2.imread('lenna.jpg',0)
 h, w = img_temp.shape
