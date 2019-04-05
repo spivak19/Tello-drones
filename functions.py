@@ -62,7 +62,7 @@ class Functions:
         face_detect = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
         face_detect
         for (x, y, w, h) in face_detect:
-            cv2.rectangle(img, (x, y), (x + w+20, y + h+20), (255, 0, 150), 5)
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
         return img
 
     # Grayscale only!
