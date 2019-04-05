@@ -2,33 +2,55 @@ import cv2
 import numpy as np
 import functions
 
-
+#initialize the video capture function
 cap=cv2.VideoCapture(0);
-while(True):
 
+while True:
+    # get frames from web camera
     ret, frame = cap.read()
+
+    # convert to grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    #Resize frame size (Optional)
+    frame= cv2.resize(frame, (0,0), fx=0.5, fy=0.5)
+
+    #Initiate the function class with grayscale image- the class that holds all of the functions
     function = functions.Functions(gray)
 
-    gauss = function.gauss    #Gaussian blur
+    #initiate the function class with colored image
+    #and start the face recognition function
+    face= functions.Functions(frame).face()
 
-    img_sobel = function.sobel(3,3)
-    img_canny = cv2.Canny(gauss, 100, 20,9)
-    auto_canny = function.auto_canny(0.5)
-    img_prewitt= function.prewitt()
-    th = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
+    # Gaussian blur
+    #gauss = function.gauss
 
+    # Sobel edge detection
+    #img_sobel = function.sobel(3,3)
 
+    # Canny edge detection- regular canny and auto canny
+    #img_canny = cv2.Canny(gauss, 100, 20,9)
+    #auto_canny = function.auto_canny(0.5)
+
+    # prewitt edge detection
+    #img_prewitt= function.prewitt()
+
+    #Dynamic threshold
+    #th = function.dynamic_thresh()
+
+    #Print on screen
+    cv2.imshow('face detection', face)
     #cv2.imshow('sobel',img_sobel)
-    cv2.imshow('auto canny', auto_canny)
+    #cv2.imshow('auto canny', auto_canny)
     #cv2.imshow('prewitt', img_prewitt)
-    cv2.imshow('canny', canny)
-    cv2.imshow('adaptive thresh', th)
+    #cv2.imshow('canny', canny)
+    #cv2.imshow('adaptive thresh', th)
 
     if cv2.waitKey(1) == 27:
         break
 
-# When everything done, release the capture
+# When everything is done release the capture
 cap.release()
 cv2.destroyAllWindows()
+
 

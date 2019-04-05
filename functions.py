@@ -63,3 +63,6 @@ class Functions:
             cv2.rectangle(img, (x, y), (x + w+20, y + h+20), (255, 0, 150), 5)
         return img
 
+    def dynamic_thresh(self):
+        threshold= cv2.adaptiveThreshold(self.image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
+        return threshold
