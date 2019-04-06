@@ -2,6 +2,7 @@ import cv2
 import functions
 
 #hey sahar whatsup
+#all good man!
 
 img_temp = cv2.imread('lenna.jpg',0)
 h, w = img_temp.shape
