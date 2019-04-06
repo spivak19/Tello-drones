@@ -1,8 +1,7 @@
 import cv2
 import functions
 
-#hey sahar! i'm editing the code straightly from pycharm!
-#please accept this commit!!
+#hey sahar whatsup
 
 img_temp = cv2.imread('lenna.jpg',0)
 h, w = img_temp.shape
