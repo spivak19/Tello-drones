@@ -8,7 +8,7 @@ class Functions:
 
     def __init__(self, image):
         self.image = image
-        #self.gauss = cv2.GaussianBlur(image,(1,1),0)
+        self.gauss = cv2.GaussianBlur(image,(1,1),0)
 
     # Colored and grayscale
     def salt_pepper(self , prob):
