@@ -15,11 +15,11 @@ while True:
 
     #Initiate the function class with grayscale image- the class that holds all of the functions
     function = functions.Functions(gray)
-
+    colored = functions.Functions(frame)
     #initiate the function class with colored image
     #and start the face recognition function
-    face= functions.Functions(frame).face_video()
-
+    #face = colored.face_video()
+    face = colored.face_video()
     # Gaussian blur
     #gauss = function.gauss
 
@@ -37,7 +37,7 @@ while True:
     #th = function.dynamic_thresh()
 
     #Print on screen
-    cv2.imshow('face detection', face)
+    cv2.imshow('face detection1', face)
     #cv2.imshow('sobel',img_sobel)
     #cv2.imshow('auto canny', auto_canny)
     #cv2.imshow('prewitt', img_prewitt)
