@@ -10,7 +10,7 @@ import libh264decoder
 class tello_video:
 
     def __init__(self,local_port , local_ip,
-                 tello_ip='192.168.10.1' ,tello_port='11111'):
+                 tello_ip='192.168.10.1' ,tello_port=8889):
 
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # socket for sending cmd
         self.decoder = libh264decoder.H264Decoder()
@@ -31,7 +31,7 @@ class tello_video:
         #print ('sent: command')
         #self.socket.sendto(streamon, self.tello_address)
         #print ('sent: streamon')
-        #self.socket_video.bind((local_ip, self.local_video_port))
+        self.socket_video.bind((local_ip, self.local_video_port))
 
         self.receive_video_thread = threading.Thread(target=self._receive_video_thread)
         self.receive_video_thread.daemon = True
