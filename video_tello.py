@@ -1,22 +1,26 @@
 import cv2
 from PIL import Image
 import numpy as np
+import tello
+import functions
 
 
-def video_stream(tello):
-    tello = tello.tello_video(local_port=8889,local_ip='')
-    while True:
-        frame = tello.read()
-        if frame is None or frame.size == 0:
-            continue
-        else:
-            image = Image.fromarray(frame)
-            opencvImage = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-            cv2.imshow('video', opencvImage)
+functions = functions.Functions(None)
+tello = tello.tello(local_port=8889,local_ip='')
+while True:
+    frame = tello.read()
+    if frame is None or frame.size == 0:
+        continue
+    else:
+        image = Image.fromarray(frame)
+        img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        functions.image = img
 
-        if cv2.waitKey(1) == 27:
-            break
-    tello.__del__()
+        cv2.imshow('video', img)
+
+    if cv2.waitKey(1) == 27:
+        break
+tello.__del__()
 
 
 

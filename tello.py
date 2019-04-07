@@ -5,9 +5,10 @@ import socket
 import threading
 import time
 import libh264decoder
+from PIL import Image
 
 
-class tello_video:
+class tello:
 
     def __init__(self,local_port , local_ip,
                  tello_ip='192.168.10.1' ,tello_port=8889):
@@ -20,7 +21,6 @@ class tello_video:
         self.tello_address = (tello_ip, tello_port)
         self.local_video_port = 11111
         self.socket.bind((local_ip, local_port))
-
         #command = map(bin,bytearray('command'))
         #' '.join(map(bin,bytearray(command)))
 
@@ -89,3 +89,18 @@ class tello_video:
                 res_frame_list.append(frame)
 
         return res_frame_list
+
+    def video_stream(tello):
+        # tello = tello.tello(local_port=8889,local_ip='')
+        while True:
+            frame = tello.read()
+            if frame is None or frame.size == 0:
+                continue
+            else:
+                image = Image.fromarray(frame)
+                opencvImage = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+                cv2.imshow('video', opencvImage)
+
+            if cv2.waitKey(1) == 27:
+                break
+        tello.__del__()
