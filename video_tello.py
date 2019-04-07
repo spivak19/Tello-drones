@@ -15,7 +15,6 @@ while True:
         image = Image.fromarray(frame)
         img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         functions.image = img
-
         cv2.imshow('video', img)
 
     if cv2.waitKey(1) == 27:
