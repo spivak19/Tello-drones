@@ -1,22 +1,22 @@
-import numpy as np
 import cv2
-import tello
-import threading
 from PIL import Image
+import numpy as np
 
-tello = tello.tello_video(8889,'192.168.10.2')
-while True:
-    frame = tello.read()
 
-    if frame is None or frame.size == 0:
-        continue
-    else:
-        image = Image.fromarray(frame)
-        cv2.imshow('tello', image)
+def video_stream(tello):
+    tello = tello.tello_video(local_port=8889,local_ip='')
+    while True:
+        frame = tello.read()
+        if frame is None or frame.size == 0:
+            continue
+        else:
+            image = Image.fromarray(frame)
+            opencvImage = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+            cv2.imshow('video', opencvImage)
 
-    if cv2.waitKey(1) == 27:
-        break
-tello.__del__()
+        if cv2.waitKey(1) == 27:
+            break
+    tello.__del__()
 
 
 
