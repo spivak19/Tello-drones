@@ -73,7 +73,7 @@ class Functions:
     def face_image(self):
         img = self.image
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
+        face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         face_detect = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=1)
         face_detect
         for (x, y, w, h) in face_detect:

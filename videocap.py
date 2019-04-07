@@ -3,7 +3,7 @@ import numpy as np
 import functions
 
 #initialize the video capture function
-cap=cv2.VideoCapture(0);
+cap=cv2.VideoCapture(0)
 
 while True:
     # get frames from web camera
