@@ -6,7 +6,7 @@ import threading
 import time
 import libh264decoder
 from PIL import Image
-
+import keyboard
 
 class tello:
 
@@ -17,26 +17,32 @@ class tello:
         self.decoder = libh264decoder.H264Decoder()
         self.frame = None
         self.last_frame = None
+        self.image = None
         self.socket_video = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.tello_address = (tello_ip, tello_port)
         self.local_video_port = 11111
         self.socket.bind((local_ip, local_port))
-        #command = map(bin,bytearray('command'))
-        #' '.join(map(bin,bytearray(command)))
 
-        #streamon = map(bin, bytearray('streamon'))
-        #' '.join(map(bin, bytearray(streamon)))
-
-        #self.socket.sendto(command, self.tello_address)
-        #print ('sent: command')
-        #self.socket.sendto(streamon, self.tello_address)
-        #print ('sent: streamon')
         self.socket_video.bind((local_ip, self.local_video_port))
 
         self.receive_video_thread = threading.Thread(target=self._receive_video_thread)
         self.receive_video_thread.daemon = True
-
         self.receive_video_thread.start()
+
+        self._send_command = threading.Thread(target=self.send_command)
+        self._send_command.daemon = True
+        self._send_command.start()
+
+        self.video_show_thread = threading.Thread(target=self.video_stream)
+        self.video_show_thread.daemon = False
+        self.video_show_thread.start()
+
+        self._manual_flight = threading.Thread(target=self.manual_flight)
+        self._manual_flight.daemon = True
+        self._manual_flight.start()
+
+        self.socket.sendto(b'command', self.tello_address); print('sent: command')
+        self.socket.sendto(b'streamon', self.tello_address); print('sent: streamon')
 
     def __del__(self):
         """Closes the local socket."""
@@ -50,9 +56,7 @@ class tello:
     def _receive_video_thread(self):
         """
         Listens for video streaming (raw h264) from the Tello.
-
         Runs as a thread, sets self.frame to the most recent frame Tello captured.
-
         """
         packet_data = ""
         while True:
@@ -71,9 +75,7 @@ class tello:
     def _h264_decode(self, packet_data):
         """
         decode raw h264 format data from Tello
-
         :param packet_data: raw h264 data array
-
         :return: a list of decoded frame
         """
         res_frame_list = []
@@ -90,10 +92,18 @@ class tello:
 
         return res_frame_list
 
-    def video_stream(tello):
+
+    def send_command(self):
+        while True:
+            self.socket.sendto(b'command', self.tello_address)
+            time.sleep(1)
+            self.socket.sendto(b'streamon', self.tello_address)
+            time.sleep(5)
+
+    def video_stream(self):
         # tello = tello.tello(local_port=8889,local_ip='')
         while True:
-            frame = tello.read()
+            frame = self.frame
             if frame is None or frame.size == 0:
                 continue
             else:
@@ -104,3 +114,86 @@ class tello:
             if cv2.waitKey(1) == 27:
                 break
         tello.__del__()
+
+    def takeoff(self):
+        self.socket.sendto(b'takeoff', self.tello_address)
+
+    def land(self):
+        self.socket.sendto(b'land', self.tello_address)
+
+    def forward(self):
+        self.socket.sendto(b'forward 30', self.tello_address)
+
+    def back(self):
+        self.socket.sendto(b'back 30', self.tello_address)
+
+    def right(self):
+        self.socket.sendto(b'right 30', self.tello_address)
+
+    def left(self):
+        self.socket.sendto(b'left 30', self.tello_address)
+
+    def up(self):
+        self.socket.sendto(b'up 30', self.tello_address)
+
+    def down(self):
+        self.socket.sendto(b'down 30', self.tello_address)
+
+    def cw(self):
+        self.socket.sendto(b'cw 30', self.tello_address)
+
+    def ccw(self):
+        self.socket.sendto(b'ccw 30', self.tello_address)
+
+    def battery(self):
+        self.socket.sendto(b'battey?', self.tello_address)
+
+    def flight_plan(self):
+        time.sleep(1)
+        self.takeoff();    print('takeoff')
+        time.sleep(3)
+        self.forward()
+        time.sleep(3)
+        self.back()
+        time.sleep(3)
+        self.cw()
+        time.sleep(3)
+        self.cw()
+        time.sleep(3)
+        self.land();       print('land')
+
+    def manual_flight(self):
+        while True:
+            action = raw_input('please enter tello actions')
+            if keyboard.is_pressed('t'):
+                self.takeoff(); print('takeoff')
+                continue
+            if action == 'land':
+                self.land(); print('land')
+                continue
+            if action == 'forward':
+                self.forward(); print('forward')
+                continue
+            if action == 'back':
+                self.back(); print('back')
+                continue
+            if action == 'right':
+                self.right(); print('right')
+                continue
+            if action == 'left':
+                self.left(); print('left')
+                continue
+            if action == 'up':
+                self.up(); print('up')
+                continue
+            if action == 'down':
+                self.down(); print('down')
+                continue
+            if action == 'cw':
+                self.cw(); print('cw')
+                continue
+            if action == 'ccw':
+                self.ccw(); print('ccw')
+                continue
+            else:
+                print('Enter valid action')

@@ -21,28 +21,29 @@ while True:
     #face = colored.face_video()
     face = colored.face_video()
     # Gaussian blur
-    #gauss = function.gauss
+    gauss = function.gauss
 
     # Sobel edge detection
-    #img_sobel = function.sobel(3,3)
+    img_sobel = function.sobel(3,3)
 
     # Canny edge detection- regular canny and auto canny
-    #img_canny = cv2.Canny(gauss, 100, 20,9)
-    #auto_canny = function.auto_canny(0.5)
+    canny = cv2.Canny(gauss, 100, 20,9)
+    auto_canny = function.auto_canny(0.1)
 
     # prewitt edge detection
-    #img_prewitt= function.prewitt()
+    img_prewitt= function.prewitt()
 
     #Dynamic threshold
-    #th = function.dynamic_thresh()
+    th = function.dynamic_thresh()
 
     #Print on screen
     cv2.imshow('face detection1', face)
-    #cv2.imshow('sobel',img_sobel)
-    #cv2.imshow('auto canny', auto_canny)
-    #cv2.imshow('prewitt', img_prewitt)
-    #cv2.imshow('canny', canny)
-    #cv2.imshow('adaptive thresh', th)
+    cv2.imshow('sobel',img_sobel)
+    cv2.imshow('auto canny', auto_canny)
+    cv2.imshow('prewitt', img_prewitt)
+    cv2.imshow('auto_canny', auto_canny)
+    cv2.imshow('canny', canny)
+    cv2.imshow('adaptive thresh', th)
 
     if cv2.waitKey(1) == 27:
         break
