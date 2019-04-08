@@ -117,7 +117,7 @@ class tello:
 
             if cv2.waitKey(1) == 27:
                 break
-        tello.__del__()
+        self.__del__()
 
     def _receive_thread(self):
 
@@ -187,40 +187,40 @@ class tello:
         self.land();       print('land')
 
     def manual_flight(self):
-        while True:
-            action = raw_input('>>')
-            if action == 't':
-                self.takeoff()
-                continue
-            if action == 'l':
-                self.land()
-                continue
-            if action == 'w':
-                self.forward()
-                continue
-            if action == 's':
-                self.back()
-                continue
-            if action == 'd':
-                self.right()
-                continue
-            if action == 'a':
-                self.left()
-                continue
-            if action == 'u':
-                self.up()
-                continue
-            if action == 'j':
-                self.down()
-                continue
-            if action == 'e':
-                self.cw()
-                continue
-            if action == 'q':
-                self.ccw()
-                continue
-            if action == 'b':
-                self.battery()
-                continue
-            else:
-               continue
+        while True:  # making a loop
+            try:  # used try so that if user pressed other than the given key error will not be shown
+                if keyboard.is_pressed('w'):  # if key 'q' is pressed
+                    self.forward()
+                    time.sleep(0.2)  # finishing the loop
+                if keyboard.is_pressed('s'):  # if key 's' is pressed
+                    self.back()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('d'):  # if key 'd' is pressed
+                    self.right()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('a'):  # if key 'a' is pressed
+                    self.left()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('b'):  # if key 'a' is pressed
+                    self.battery()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('t'):  # if key 'a' is pressed
+                    self.takeoff()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('l'):  # if key 'a' is pressed
+                    self.land()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('u'):  # if key 'a' is pressed
+                    self.up()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('j'):  # if key 'a' is pressed
+                    self.down()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('e'):  # if key 'a' is pressed
+                    self.cw()
+                    time.sleep(1)  # finishing the loop
+                if keyboard.is_pressed('q'):  # if key 'a' is pressed
+                    self.ccw()
+                    time.sleep(1)  # finishing the loop
+            except:
+                break  # if user pressed a key other than the given key the loop will break
