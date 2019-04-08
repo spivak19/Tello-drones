@@ -193,10 +193,10 @@ class tello:
             if action == 'j':
                 self.down(); print('action: down')
                 continue
-            if action == 'q':
+            if action == 'e':
                 self.cw(); print('action: clock wise')
                 continue
-            if action == 'e':
+            if action == 'q':
                 self.ccw(); print('action:counter clock wise')
                 continue
             else:
