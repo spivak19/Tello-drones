@@ -189,38 +189,38 @@ class tello:
     def manual_flight(self):
         while True:  # making a loop
             try:  # used try so that if user pressed other than the given key error will not be shown
-                if keyboard.is_pressed('w'):  # if key 'q' is pressed
+                if keyboard.is_pressed('w'):  # move forward
                     self.forward()
-                    time.sleep(0.2)  # finishing the loop
-                if keyboard.is_pressed('s'):  # if key 's' is pressed
+                    time.sleep(0.2)  
+                if keyboard.is_pressed('s'):  # Move backward
                     self.back()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('d'):  # if key 'd' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('d'):  # Move right
                     self.right()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('a'):  # if key 'a' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('a'):  # Move left
                     self.left()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('b'):  # if key 'a' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('b'):  # Display battery percentage
                     self.battery()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('t'):  # if key 'a' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('t'):  # Take off
                     self.takeoff()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('l'):  # if key 'a' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('l'):  # Land
                     self.land()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('u'):  # if key 'a' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('u'):  # Move up
                     self.up()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('j'):  # if key 'a' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('j'):  # Move down
                     self.down()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('e'):  # if key 'a' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('e'):  # rotate clock wise
                     self.cw()
-                    time.sleep(1)  # finishing the loop
-                if keyboard.is_pressed('q'):  # if key 'a' is pressed
+                    time.sleep(1)  
+                if keyboard.is_pressed('q'):  # rotate counter clock wise
                     self.ccw()
-                    time.sleep(1)  # finishing the loop
+                    time.sleep(1)  
             except:
                 break  # if user pressed a key other than the given key the loop will break
