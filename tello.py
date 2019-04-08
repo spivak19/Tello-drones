@@ -151,49 +151,53 @@ class tello:
     def flight_plan(self):
         time.sleep(1)
         self.takeoff();    print('takeoff')
-        time.sleep(3)
-        self.forward()
-        time.sleep(3)
+        time.sleep(5)
+        self.right()
+        time.sleep(5)
+        self.up()
+        time.sleep(5)
+        self.up()
+        time.sleep(5)
+        self.up()
+        time.sleep(5)
         self.back()
-        time.sleep(3)
-        self.cw()
-        time.sleep(3)
-        self.cw()
-        time.sleep(3)
+        time.sleep(5)
+        self.ccw()
+        time.sleep(5)
         self.land();       print('land')
 
     def manual_flight(self):
         while True:
             action = raw_input('please enter tello actions')
-            if keyboard.is_pressed('t'):
-                self.takeoff(); print('takeoff')
+            if action == 't':
+                self.takeoff(); print('action: takeoff')
                 continue
-            if action == 'land':
-                self.land(); print('land')
+            if action == 'l':
+                self.land(); print('action: land')
                 continue
-            if action == 'forward':
-                self.forward(); print('forward')
+            if action == 'w':
+                self.forward(); print('action: forward')
                 continue
-            if action == 'back':
-                self.back(); print('back')
+            if action == 's':
+                self.back(); print('action: back')
                 continue
-            if action == 'right':
-                self.right(); print('right')
+            if action == 'd':
+                self.right(); print('action: right')
                 continue
-            if action == 'left':
-                self.left(); print('left')
+            if action == 'a':
+                self.left(); print('action: left')
                 continue
-            if action == 'up':
-                self.up(); print('up')
+            if action == 'u':
+                self.up(); print('action: up')
                 continue
-            if action == 'down':
-                self.down(); print('down')
+            if action == 'j':
+                self.down(); print('action: down')
                 continue
-            if action == 'cw':
-                self.cw(); print('cw')
+            if action == 'q':
+                self.cw(); print('action: clock wise')
                 continue
-            if action == 'ccw':
-                self.ccw(); print('ccw')
+            if action == 'e':
+                self.ccw(); print('action:counter clock wise')
                 continue
             else:
                 print('Enter valid action')
