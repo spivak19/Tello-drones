@@ -29,6 +29,10 @@ class tello:
         self.receive_video_thread.daemon = True
         self.receive_video_thread.start()
 
+        self.receive_thread = threading.Thread(target=self._receive_thread)
+        self.receive_thread.daemon = True
+        self.receive_thread.start()
+
         self._send_command = threading.Thread(target=self.send_command)
         self._send_command.daemon = True
         self._send_command.start()
@@ -98,7 +102,7 @@ class tello:
             self.socket.sendto(b'command', self.tello_address)
             time.sleep(1)
             self.socket.sendto(b'streamon', self.tello_address)
-            time.sleep(5)
+            time.sleep(7)
 
     def video_stream(self):
         # tello = tello.tello(local_port=8889,local_ip='')
@@ -115,8 +119,24 @@ class tello:
                 break
         tello.__del__()
 
+    def _receive_thread(self):
+
+        while True:
+            try:
+                self.response, ip = self.socket.recvfrom(3000)
+                # print(self.response)
+            except socket.error as exc:
+                print ("Caught exception socket.error : %s" % exc)
+            if self.response is None:
+                response = 'none_response'
+            else:
+                response = self.response.decode('utf-8')
+                print ('Tello: '+response)
+            self.response = None
+
     def takeoff(self):
         self.socket.sendto(b'takeoff', self.tello_address)
+
 
     def land(self):
         self.socket.sendto(b'land', self.tello_address)
@@ -146,7 +166,7 @@ class tello:
         self.socket.sendto(b'ccw 30', self.tello_address)
 
     def battery(self):
-        self.socket.sendto(b'battey?', self.tello_address)
+        self.socket.sendto(b'battery?', self.tello_address)
 
     def flight_plan(self):
         time.sleep(1)
@@ -168,36 +188,39 @@ class tello:
 
     def manual_flight(self):
         while True:
-            action = raw_input('please enter tello actions')
+            action = raw_input('>>')
             if action == 't':
-                self.takeoff(); print('action: takeoff')
+                self.takeoff()
                 continue
             if action == 'l':
-                self.land(); print('action: land')
+                self.land()
                 continue
             if action == 'w':
-                self.forward(); print('action: forward')
+                self.forward()
                 continue
             if action == 's':
-                self.back(); print('action: back')
+                self.back()
                 continue
             if action == 'd':
-                self.right(); print('action: right')
+                self.right()
                 continue
             if action == 'a':
-                self.left(); print('action: left')
+                self.left()
                 continue
             if action == 'u':
-                self.up(); print('action: up')
+                self.up()
                 continue
             if action == 'j':
-                self.down(); print('action: down')
+                self.down()
                 continue
             if action == 'e':
-                self.cw(); print('action: clock wise')
+                self.cw()
                 continue
             if action == 'q':
-                self.ccw(); print('action:counter clock wise')
+                self.ccw()
+                continue
+            if action == 'b':
+                self.battery()
                 continue
             else:
-                print('Enter valid action')
+               continue
