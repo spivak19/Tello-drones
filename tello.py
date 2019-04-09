@@ -7,12 +7,13 @@ import time
 import libh264decoder
 from PIL import Image
 import keyboard
+import os
 
 class tello:
 
     def __init__(self,local_port , local_ip,
                  tello_ip='192.168.10.1' ,tello_port=8889):
-
+        self.video_bool = False
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # socket for sending cmd
         self.decoder = libh264decoder.H264Decoder()
         self.frame = None
@@ -36,6 +37,10 @@ class tello:
         self._send_command = threading.Thread(target=self.send_command)
         self._send_command.daemon = True
         self._send_command.start()
+
+        self._save_video = threading.Thread(target=self.save_video)
+        self._save_video.daemon = True
+        self._save_video.start()
 
         self.video_show_thread = threading.Thread(target=self.video_stream)
         self.video_show_thread.daemon = False
@@ -111,8 +116,9 @@ class tello:
             if frame is None or frame.size == 0:
                 continue
             else:
-                image = Image.fromarray(frame)
+                image = Image.fromarray(frame) #may cause error
                 opencvImage = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+                self.image = opencvImage
                 cv2.imshow('video', opencvImage)
 
             if cv2.waitKey(1) == 27:
@@ -143,6 +149,9 @@ class tello:
 
     def forward(self):
         self.socket.sendto(b'forward 30', self.tello_address)
+
+    def forward_100(self):
+        self.socket.sendto(b'forward 100', self.tello_address)
 
     def back(self):
         self.socket.sendto(b'back 30', self.tello_address)
@@ -186,7 +195,25 @@ class tello:
         time.sleep(5)
         self.land();       print('land')
 
+    def save_video(self):
+        print('yes it is recording')
+        FILE_OUTPUT = 'output.avi'
+        if os.path.isfile(FILE_OUTPUT):
+            os.remove(FILE_OUTPUT)
+        fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+        out = cv2.VideoWriter(FILE_OUTPUT, fourcc, 60.0, (960, 720))
+        while self.video_bool == False:
+            continue
+        while self.video_bool == True:
+            out.write(self.image)
+            if cv2.waitKey(1) == 27:
+                break
+        out.release()
+
+
+
     def manual_flight(self):
+        video_pressed = self.video_bool
         while True:  # making a loop
             try:  # used try so that if user pressed other than the given key error will not be shown
                 if keyboard.is_pressed('w'):  # move forward
@@ -221,6 +248,17 @@ class tello:
                     time.sleep(1)  
                 if keyboard.is_pressed('q'):  # rotate counter clock wise
                     self.ccw()
-                    time.sleep(1)  
+                    time.sleep(1)
+                if keyboard.is_pressed('2'):  # move forward 100 cm
+                    self.forward_100()
+                    time.sleep(1)
+                if keyboard.is_pressed('v') and not self.video_bool:  # save video to file
+                    print('saving video')
+                    self.video_bool = True
+                    time.sleep(1)
+                if keyboard.is_pressed('v') and self.video_bool:  # save video to file
+                    print('stopping video')
+                    self.video_bool = False
+                    time.sleep(1)
             except:
                 break  # if user pressed a key other than the given key the loop will break
