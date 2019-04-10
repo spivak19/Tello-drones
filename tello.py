@@ -152,7 +152,6 @@ class tello:
             continue
         while self.video_bool == True:
             out.write(self.image)
-            print('saving video')
             if cv2.waitKey(1) == 27:
                 break
         out.release()
