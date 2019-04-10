@@ -7,12 +7,14 @@ import time
 import libh264decoder
 from PIL import Image
 import keyboard
+import os
 
 class tello:
 
     def __init__(self,local_port , local_ip,
                  tello_ip='192.168.10.1' ,tello_port=8889):
 
+        self.video_bool = False
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # socket for sending cmd
         self.decoder = libh264decoder.H264Decoder()
         self.frame = None
@@ -45,6 +47,10 @@ class tello:
         self._manual_flight.daemon = True
         self._manual_flight.start()
 
+        self._save_video = threading.Thread(target=self.save_video)
+        self._save_video.daemon = True
+        self._save_video.start()
+
         self.socket.sendto(b'command', self.tello_address); print('sent: command')
         self.socket.sendto(b'streamon', self.tello_address); print('sent: streamon')
 
@@ -63,6 +69,7 @@ class tello:
         Runs as a thread, sets self.frame to the most recent frame Tello captured.
         """
         packet_data = ""
+
         while True:
             try:
                 res_string, ip = self.socket_video.recvfrom(2048)
@@ -114,7 +121,7 @@ class tello:
                 image = Image.fromarray(frame)
                 opencvImage = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
                 cv2.imshow('video', opencvImage)
-
+                self.image = opencvImage
             if cv2.waitKey(1) == 27:
                 break
         self.__del__()
@@ -133,6 +140,22 @@ class tello:
                 response = self.response.decode('utf-8')
                 print ('Tello: '+response)
             self.response = None
+
+    def save_video(self):
+        print('yes it is recording')
+        FILE_OUTPUT = 'output.avi'
+        if os.path.isfile(FILE_OUTPUT):
+            os.remove(FILE_OUTPUT)
+        fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+        out = cv2.VideoWriter(FILE_OUTPUT, fourcc, 60.0, (960, 720))
+        while self.video_bool == False:
+            continue
+        while self.video_bool == True:
+            out.write(self.image)
+            print('saving video')
+            if cv2.waitKey(1) == 27:
+                break
+        out.release()
 
     def takeoff(self):
         self.socket.sendto(b'takeoff', self.tello_address)
@@ -171,21 +194,6 @@ class tello:
 
     def flight_plan(self):
         time.sleep(1)
-        self.takeoff();    print('takeoff')
-        time.sleep(5)
-        self.right()
-        time.sleep(5)
-        self.up()
-        time.sleep(5)
-        self.up()
-        time.sleep(5)
-        self.up()
-        time.sleep(5)
-        self.back()
-        time.sleep(5)
-        self.ccw()
-        time.sleep(5)
-        self.land();       print('land')
 
     def joystick_flight(self):
         while True:
@@ -210,9 +218,9 @@ class tello:
                     c = c-50
 
                 if keyboard.is_pressed('9'):  # move cw
-                    d = d+50
+                    d = d+150
                 if keyboard.is_pressed('7'):  # move ccw
-                    d = d-50
+                    d = d-150
 
                 self.socket.sendto(b'rc ' + str(a) + ' '+str(b) + ' '
                                    + str(c) + ' ' + str(d), self.tello_address)
@@ -256,6 +264,7 @@ class tello:
                 if keyboard.is_pressed('q'):  # rotate counter clock wise
                     self.ccw()
                     time.sleep(1)
+
                 a = 0
                 b = 0
                 c = 0
@@ -267,7 +276,7 @@ class tello:
 
                 if keyboard.is_pressed('8'):  # move forward
                     b = b+50
-                if keyboard.is_pressed('2'):  # move backward
+                if keyboard.is_pressed('5'):  # move backward
                     b = b-50
 
                 if keyboard.is_pressed('u'):  # move up
@@ -282,5 +291,13 @@ class tello:
 
                 self.socket.sendto(b'rc ' + str(a) + ' '+str(b) + ' '
                                    + str(c) + ' ' + str(d), self.tello_address)
+                if keyboard.is_pressed('v') and not self.video_bool:  # save video to file
+                    print('saving video')
+                    self.video_bool = True
+                    time.sleep(1)
+                if keyboard.is_pressed('v') and self.video_bool:  # save video to file
+                    print('stopping video')
+                    self.video_bool = False
+                    time.sleep(1)
             except:
                 break  # if user pressed a key other than the given key the loop will break
