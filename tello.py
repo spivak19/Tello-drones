@@ -168,6 +168,7 @@ class tello:
     def battery(self):
         self.socket.sendto(b'battery?', self.tello_address)
 
+
     def flight_plan(self):
         time.sleep(1)
         self.takeoff();    print('takeoff')
@@ -185,6 +186,39 @@ class tello:
         self.ccw()
         time.sleep(5)
         self.land();       print('land')
+
+    def joystick_flight(self):
+        while True:
+            try:
+                a = 0
+                b = 0
+                c = 0
+                d = 0
+                if keyboard.is_pressed('6'):  # move right
+                    a = a+50
+                if keyboard.is_pressed('4'):  # move left
+                    a = a-50
+
+                if keyboard.is_pressed('8'):  # move forward
+                    b = b+50
+                if keyboard.is_pressed('5'):  # move backward
+                    b = b-50
+
+                if keyboard.is_pressed('u'):  # move up
+                    c = c+50
+                if keyboard.is_pressed('j'):  # move down
+                    c = c-50
+
+                if keyboard.is_pressed('9'):  # move cw
+                    d = d+50
+                if keyboard.is_pressed('7'):  # move ccw
+                    d = d-50
+
+                self.socket.sendto(b'rc ' + str(a) + ' '+str(b) + ' '
+                                   + str(c) + ' ' + str(d), self.tello_address)
+            except:
+                break  # if user pressed a key other than the given key the loop will break
+            
 
     def manual_flight(self):
         while True:  # making a loop
@@ -210,10 +244,10 @@ class tello:
                 if keyboard.is_pressed('l'):  # Land
                     self.land()
                     time.sleep(1)  
-                if keyboard.is_pressed('u'):  # Move up
+                if keyboard.is_pressed('i'):  # Move up
                     self.up()
                     time.sleep(1)  
-                if keyboard.is_pressed('j'):  # Move down
+                if keyboard.is_pressed('k'):  # Move down
                     self.down()
                     time.sleep(1)  
                 if keyboard.is_pressed('e'):  # rotate clock wise
@@ -221,6 +255,32 @@ class tello:
                     time.sleep(1)  
                 if keyboard.is_pressed('q'):  # rotate counter clock wise
                     self.ccw()
-                    time.sleep(1)  
+                    time.sleep(1)
+                a = 0
+                b = 0
+                c = 0
+                d = 0
+                if keyboard.is_pressed('6'):  # move right
+                    a = a+50
+                if keyboard.is_pressed('4'):  # move left
+                    a = a-50
+
+                if keyboard.is_pressed('8'):  # move forward
+                    b = b+50
+                if keyboard.is_pressed('2'):  # move backward
+                    b = b-50
+
+                if keyboard.is_pressed('u'):  # move up
+                    c = c+50
+                if keyboard.is_pressed('j'):  # move down
+                    c = c-50
+
+                if keyboard.is_pressed('9'):  # move cw
+                    d = d+50
+                if keyboard.is_pressed('7'):  # move ccw
+                    d = d-50
+
+                self.socket.sendto(b'rc ' + str(a) + ' '+str(b) + ' '
+                                   + str(c) + ' ' + str(d), self.tello_address)
             except:
                 break  # if user pressed a key other than the given key the loop will break
