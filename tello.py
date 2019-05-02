@@ -15,7 +15,12 @@ class tello:
 
     def __init__(self,local_port , local_ip,
                  tello_ip='192.168.10.1' ,tello_port=8889):
-
+        self.height_value = None
+        self.height_bool = False
+        self.battery_percent = None
+        self.battery_bool = False
+        self.imu = None
+        self.degrees = None
         self.video_bool = False
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # socket for sending cmd
         self.decoder = libh264decoder.H264Decoder()
@@ -52,9 +57,6 @@ class tello:
         self._save_video = threading.Thread(target=self.save_video)
         self._save_video.daemon = True
         self._save_video.start()
-
-        self.socket.sendto(b'command', self.tello_address); print('sent: command')
-        self.socket.sendto(b'streamon', self.tello_address); print('sent: streamon')
 
     def __del__(self):
         """Closes the local socket."""
@@ -122,8 +124,23 @@ class tello:
             else:
                 image = Image.fromarray(frame)
                 opencvImage = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-                cv2.imshow('video', opencvImage)
+                self.attitude()
+                self.battery()
+                self.battery_bool = True
+                self.height()
+
+                try:
+                    cv2.putText(opencvImage, self.degrees[0:len(self.degrees)-2],
+                                (30,30),cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255),2,cv2.LINE_AA)
+                    cv2.putText(opencvImage, self.battery_percent,
+                                (600,30),cv2.FONT_HERSHEY_SIMPLEX, 1,(255,0,255),2,cv2.LINE_AA)
+                    cv2.putText(opencvImage, self.height_value,
+                                (600,600),cv2.FONT_HERSHEY_SIMPLEX, 1,(255,0,255),2,cv2.LINE_AA)
+                    cv2.imshow('video', opencvImage)
+                except:
+                    cv2.imshow('video', opencvImage)
                 self.image = opencvImage
+                self.battery_bool = False
             if cv2.waitKey(1) == 27:
                 break
         self.__del__()
@@ -140,7 +157,15 @@ class tello:
                 response = 'none_response'
             else:
                 response = self.response.decode('utf-8')
-                print ('Response: '+response)
+                if response[0:5] == "pitch":
+                    self.degrees = response
+                elif response.find('dm') != -1:
+                    self.height_value = response[0:len(response)-2]
+                elif self.battery_bool is True:
+                    self.battery_percent = "Battery: "+response[0:len(response)-2]
+                else:
+                    response = self.response
+                    #print ('Response: '+response)
             self.response = None
 
     def save_video(self):
@@ -191,10 +216,19 @@ class tello:
 
     def battery(self):
         self.socket.sendto(b'battery?', self.tello_address)
+
     def height(self):
         self.socket.sendto(b'height?', self.tello_address)
+
     def go(self):
         self.socket.sendto(b'go 50 50 50 20', self.tello_address)
+
+    def acceleration(self):
+        self.socket.sendto(b'acceleration?', self.tello_address)
+
+    def attitude(self):
+        self.socket.sendto(b'attitude?', self.tello_address)
+
 
 
     def flight_plan(self):
@@ -273,6 +307,10 @@ class tello:
                 if keyboard.is_pressed('g'):  # rotate counter clock wise
                     self.go()
                     time.sleep(1)
+                if keyboard.is_pressed('x'):
+                    self.acceleration()
+                if keyboard.is_pressed('z'):
+                    self.attitude()
                 if keyboard.is_pressed('shift') and fast_bool is False:
                     fast_bool = True
                     time.sleep(0.5)
