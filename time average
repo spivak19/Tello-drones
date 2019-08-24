@@ -1,19 +1,30 @@
-#choose num to be the number of items in the queue
-
+# Variables define outside the main while loop
+# h and w are height and width of the frame
+medstack1 = []
+medstack2 = []
+counter1 = 1
+counter2 = 1
 num = 5
 
-satNmask1_queue = Queue.Queue(num)
-counter1 = 1
+# Put satNmask1 and satnmask2 calculations here
+
+
 if counter1 < num:
     counter1 += 1
-satNmask1_queue.put(satNmask1)
-satNmask1_temp = np.divide(np.sum(satNmask1_queue),counter1)
+    medstack1.append(satNmask1)
+    median_1 = np.median(medstack1, axis=0)
+else:
+    _ = medstack1.pop(0)
+    medstack1.append(satNmask1)
+    median_1 = np.median(medstack1, axis=0)
 
-satNmask2_queue = Queue.Queue(num)
-counter2 = 1
 if counter2 < num:
     counter2 += 1
-satNmask2_queue.put(satNmask2)
-satNmask2_temp = np.divide(np.sum(satNmask2_queue),counter2)
+    medstack2.append(satNmask2)
+    median_2 = np.median(medstack2, axis=0)
+else:
+    _ = medstack2.pop(0)
+    medstack2.append(satNmask2)
+    median_2 = np.median(medstack2, axis=0)
 
-# display satNmask1_temp  and satNmask2_temp
+#display median_1 and median_2
