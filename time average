@@ -1,0 +1,19 @@
+#choose num to be the number of items in the queue
+
+num = 5
+
+satNmask1_queue = Queue.Queue(num)
+counter1 = 1
+if counter1 < num:
+    counter1 += 1
+satNmask1_queue.put(satNmask1)
+satNmask1_temp = np.divide(np.sum(satNmask1_queue),counter1)
+
+satNmask2_queue = Queue.Queue(num)
+counter2 = 1
+if counter2 < num:
+    counter2 += 1
+satNmask2_queue.put(satNmask2)
+satNmask2_temp = np.divide(np.sum(satNmask2_queue),counter2)
+
+# display satNmask1_temp  and satNmask2_temp
